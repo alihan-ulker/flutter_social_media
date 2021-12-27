@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/models/user.dart';
 import 'package:social_media/pages/home_page.dart';
+import 'package:social_media/pages/login_page.dart';
 import 'package:social_media/services/authentication.dart';
 
 //The page to which the user will be directed will be specified in this widget.
@@ -23,6 +24,8 @@ class Routing extends StatelessWidget {
         if (snapshot.hasData) {
           Client activeClient = snapshot.data;
           return HomePage();
+        } else {
+          return LoginPage();
         }
       },
     );

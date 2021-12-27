@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media/routing.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: Scaffold(appBar: AppBar(), body: Center(child: Text("Merhaba"))),
+      home: Routing(),
     );
   }
 }
