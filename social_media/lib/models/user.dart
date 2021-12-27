@@ -1,39 +1,39 @@
+//@dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class User {
+class Client {
   final String id;
-  final String userName;
+  final String clientName;
   final String photoUrl;
   final String email;
   final String about;
 
-  User(
-      {required this.id,
-      required this.userName,
-      required this.photoUrl,
-      required this.email,
-      required this.about});
+  Client(
+      {@required this.id,
+      this.clientName,
+      this.photoUrl,
+      this.email,
+      this.about});
 
-  factory User.generateFromFirebase(User user) {
-    return User(
-      id: user.id,
-      userName: user.userName,
-      photoUrl: user.photoUrl,
-      email: user.email,
+  factory Client.generateFromFirebase(User client) {
+    return Client(
+      id: client.uid,
+      clientName: client.displayName,
+      photoUrl: client.photoURL,
+      email: client.email,
       about: '',
     );
   }
 
-  factory User.generateFromDoc(DocumentSnapshot doc) {
-    var docData = doc.data();
-    return User(
+  factory Client.generateFromDoc(DocumentSnapshot doc) {
+    return Client(
       id: doc.id,
-      userName: doc.get("userName"),
-      email: doc.get('email'),
-      photoUrl: doc.get('photoUrl'),
-      about: doc.get('about'),
+      clientName: doc.get("clientName"),
+      email: doc.get("email"),
+      photoUrl: doc.get("photoUrl"),
+      about: doc.get("about"),
     );
   }
 }
