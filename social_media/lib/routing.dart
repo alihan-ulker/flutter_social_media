@@ -17,15 +17,19 @@ class Routing extends StatelessWidget {
       builder: (context, snapshot) {
         //Show circular progress while waiting for connection.
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         }
 
         //If there is a user/client, go to the homepage.
         if (snapshot.hasData) {
           Client activeClient = snapshot.data;
-          return HomePage();
+          return const HomePage();
         } else {
-          return LoginPage();
+          return const LoginPage();
         }
       },
     );
