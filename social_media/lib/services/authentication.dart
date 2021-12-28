@@ -14,4 +14,20 @@ class Authentication {
   Stream<Client> get statusTracker {
     return _firebaseAuth.authStateChanges().map(_userCreate);
   }
+
+  Future<Client> registerWithEmail(String mail, String password) async {
+    var loginCard = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: mail, password: password);
+    return _userCreate(loginCard.user);
+  }
+
+  Future<Client> loginWithEmail(String mail, String password) async {
+    var loginCard = await _firebaseAuth.signInWithEmailAndPassword(
+        email: mail, password: password);
+    return _userCreate(loginCard.user);
+  }
+
+  Future<void> signOut() {
+    return _firebaseAuth.signOut();
+  }
 }
