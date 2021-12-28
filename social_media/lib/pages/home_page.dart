@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
       body: Center(
           child: GestureDetector(
               onTap: () => Authentication().signOut(),
-              child: Text("Çıkış Yap"))),
+              child: const Text("Çıkış Yap"))),
     );
   }
 }

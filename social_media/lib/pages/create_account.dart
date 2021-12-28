@@ -147,8 +147,12 @@ class _CreateAccountState extends State<CreateAccount> {
         loading = true;
       });
 
-      await Authentication().registerWithEmail(email, password);
-      Navigator.pop(context);
+      try {
+        await Authentication().registerWithEmail(email, password);
+        Navigator.pop(context);
+      } catch (error) {
+        print(error);
+      }
     }
   }
 }
