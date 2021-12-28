@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_media/services/authentication.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -142,6 +143,8 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   void _createUser() async {
+    final _authenticationService =
+        Provider.of<Authentication>(context, listen: false);
     var _formState = _formKey.currentState;
 
     if (_formState.validate()) {
@@ -151,7 +154,7 @@ class _CreateAccountState extends State<CreateAccount> {
       });
 
       try {
-        await Authentication().registerWithEmail(email, password);
+        await _authenticationService.registerWithEmail(email, password);
         Navigator.pop(context);
       } catch (error) {
         setState(() {

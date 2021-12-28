@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_media/models/user.dart';
 import 'package:social_media/pages/home_page.dart';
 import 'package:social_media/pages/login_page.dart';
@@ -12,8 +13,11 @@ class Routing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _authenticationService =
+        Provider.of<Authentication>(context, listen: false);
+
     return StreamBuilder(
-      stream: Authentication().statusTracker,
+      stream: _authenticationService.statusTracker,
       builder: (context, snapshot) {
         //Show circular progress while waiting for connection.
         if (snapshot.connectionState == ConnectionState.waiting) {

@@ -37,6 +37,7 @@ dependencies:
   cloud_firestore:
   firebase_auth:
   firebase_core:
+  provider:
 
 dev_dependencies:
   flutter_test:
