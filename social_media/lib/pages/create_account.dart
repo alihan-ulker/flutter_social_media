@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media/services/authentication.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
@@ -9,11 +10,14 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   bool loading = false;
+  final _formKey = GlobalKey<FormState>();
+  late String userName, email, password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hesap Oluştur"),
+        title: const Text("Hesap Oluştur"),
       ),
       body: ListView(
         children: [
@@ -28,13 +32,12 @@ class _CreateAccountState extends State<CreateAccount> {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
+              key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
                     //Keyboard autocomplete.
                     autocorrect: true,
-                    //Keyboard type is set to email.
-                    keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       hintText: "Kullanıcı adınızı giriniz.",
                       labelText: "Kullanıcı Adı:",
@@ -54,13 +57,12 @@ class _CreateAccountState extends State<CreateAccount> {
                       }
                       return null;
                     },
+                    onSaved: (inputValue) => userName = inputValue!,
                   ),
                   const SizedBox(
                     height: 10.0,
                   ),
                   TextFormField(
-                    //Keyboard autocomplete.
-                    autocorrect: true,
                     //Keyboard type is set to email.
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
@@ -81,6 +83,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       }
                       return null;
                     },
+                    onSaved: (inputValue) => email = inputValue!,
                   ),
                   const SizedBox(
                     height: 10.0,
@@ -106,18 +109,13 @@ class _CreateAccountState extends State<CreateAccount> {
                       }
                       return null;
                     },
+                    onSaved: (inputValue) => password = inputValue!,
                   ),
                   const SizedBox(height: 50.0),
                   Container(
                     width: double.infinity,
                     child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const CreateAccount(),
-                          ),
-                        );
-                      },
+                      onPressed: _createUser,
                       style: TextButton.styleFrom(
                         primary: Colors.white,
                         backgroundColor: Colors.blue,
@@ -138,5 +136,19 @@ class _CreateAccountState extends State<CreateAccount> {
         ],
       ),
     );
+  }
+
+  void _createUser() async {
+    var _formState = _formKey.currentState;
+
+    if (_formState!.validate()) {
+      _formState.save();
+      setState(() {
+        loading = true;
+      });
+
+      await Authentication().registerWithEmail(email, password);
+      Navigator.pop(context);
+    }
   }
 }
