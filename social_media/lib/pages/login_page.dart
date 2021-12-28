@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media/pages/create_account.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -101,7 +102,13 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Expanded(
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CreateAccount(),
+                      ),
+                    );
+                  },
                   style: TextButton.styleFrom(
                     primary: Colors.white,
                     backgroundColor: Colors.blue,
