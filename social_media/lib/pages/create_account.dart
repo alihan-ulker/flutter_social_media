@@ -1,8 +1,9 @@
+//@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:social_media/services/authentication.dart';
 
 class CreateAccount extends StatefulWidget {
-  const CreateAccount({Key? key}) : super(key: key);
+  const CreateAccount({Key key}) : super(key: key);
 
   @override
   _CreateAccountState createState() => _CreateAccountState();
@@ -11,11 +12,13 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
-  late String userName, email, password;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  String userName, email, password;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text("Hesap Oluştur"),
       ),
@@ -49,7 +52,7 @@ class _CreateAccountState extends State<CreateAccount> {
 
                     //Entered value check
                     validator: (inputValue) {
-                      if (inputValue!.isEmpty) {
+                      if (inputValue.isEmpty) {
                         return "Kullanıcı adı boş bırakılamaz!";
                       } else if (inputValue.trim().length < 4 ||
                           inputValue.trim().length > 10) {
@@ -57,7 +60,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       }
                       return null;
                     },
-                    onSaved: (inputValue) => userName = inputValue!,
+                    onSaved: (inputValue) => userName = inputValue,
                   ),
                   const SizedBox(
                     height: 10.0,
@@ -76,14 +79,14 @@ class _CreateAccountState extends State<CreateAccount> {
 
                     //Entered value check
                     validator: (inputValue) {
-                      if (inputValue!.isEmpty) {
+                      if (inputValue.isEmpty) {
                         return "Email alanı boş bırakılamaz!";
                       } else if (!inputValue.contains("@")) {
                         return "Girilen değer mail formatında olmalıdır!";
                       }
                       return null;
                     },
-                    onSaved: (inputValue) => email = inputValue!,
+                    onSaved: (inputValue) => email = inputValue,
                   ),
                   const SizedBox(
                     height: 10.0,
@@ -102,14 +105,14 @@ class _CreateAccountState extends State<CreateAccount> {
 
                     //Entered value check
                     validator: (inputValue) {
-                      if (inputValue!.isEmpty) {
+                      if (inputValue.isEmpty) {
                         return "Şifre alanı boş bırakılamaz!";
                       } else if (inputValue.trim().length < 4) {
                         return "Şifre 4 karakterden daha az olamaz!";
                       }
                       return null;
                     },
-                    onSaved: (inputValue) => password = inputValue!,
+                    onSaved: (inputValue) => password = inputValue,
                   ),
                   const SizedBox(height: 50.0),
                   Container(
@@ -141,7 +144,7 @@ class _CreateAccountState extends State<CreateAccount> {
   void _createUser() async {
     var _formState = _formKey.currentState;
 
-    if (_formState!.validate()) {
+    if (_formState.validate()) {
       _formState.save();
       setState(() {
         loading = true;
@@ -151,8 +154,26 @@ class _CreateAccountState extends State<CreateAccount> {
         await Authentication().registerWithEmail(email, password);
         Navigator.pop(context);
       } catch (error) {
-        print(error);
+        setState(() {
+          loading = false;
+        });
+        showAlert(errorCode: error.code);
       }
     }
+  }
+
+  showAlert({errorCode}) {
+    String errorMessage;
+
+    if (errorCode == "invalid-email") {
+      errorMessage = "Girdiğiniz mail adresi geçersizdir!";
+    } else if (errorCode == "email-already-in-use") {
+      errorMessage = "Girdiğiniz mail kullanılmaktadır!";
+    } else if (errorCode == "weak-password") {
+      errorMessage = "Daha zor bir şifre tercih edin!";
+    }
+
+    var snackBar = SnackBar(content: Text(errorMessage));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
