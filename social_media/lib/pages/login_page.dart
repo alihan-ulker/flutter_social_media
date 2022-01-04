@@ -1,8 +1,11 @@
+//@dart=2.9
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_media/pages/create_account.dart';
+import 'package:social_media/services/authentication.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -10,11 +13,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool loading = false;
+  String email, password;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Stack(
         children: [
           _pageElements(),
@@ -63,13 +69,14 @@ class _LoginPageState extends State<LoginPage> {
 
             //Entered value check
             validator: (inputValue) {
-              if (inputValue!.isEmpty) {
+              if (inputValue.isEmpty) {
                 return "Email alanı boş bırakılamaz!";
               } else if (!inputValue.contains("@")) {
                 return "Girilen değer mail formatında olmalıdır!";
               }
               return null;
             },
+            onSaved: (inputValue) => email = inputValue,
           ),
           const SizedBox(
             height: 40.0,
@@ -87,13 +94,14 @@ class _LoginPageState extends State<LoginPage> {
 
             //Entered value check
             validator: (inputValue) {
-              if (inputValue!.isEmpty) {
+              if (inputValue.isEmpty) {
                 return "Şifre alanı boş bırakılamaz!";
               } else if (inputValue.trim().length < 4) {
                 return "Şifre 4 karakterden daha az olamaz!";
               }
               return null;
             },
+            onSaved: (inputValue) => password = inputValue,
           ),
           const SizedBox(
             height: 70.0,
@@ -162,11 +170,38 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _login() {
-    if (_formKey.currentState!.validate()) {
+  void _login() async {
+    final _authenticationService =
+        Provider.of<Authentication>(context, listen: false);
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState?.save();
       setState(() {
         loading = true;
       });
+
+      try {
+        await _authenticationService.loginWithEmail(email, password);
+      } catch (error) {
+        showAlert(errorCode: error.code);
+      }
     }
+  }
+
+  showAlert({errorCode}) {
+    String errorMessage;
+
+    if (errorCode == "invalid-email") {
+      errorMessage = "Girdiğiniz mail adresi geçersizdir!";
+    } else if (errorCode == "user-disabled") {
+      errorMessage = "Kullanıcı engellenmiştir!";
+    } else if (errorCode == "user-not-found") {
+      errorMessage = "Böyle bir kullanıcı bulunamadı!";
+    } else if (errorCode == "wrong-password") {
+      errorMessage = "Girdiğiniz şifre hatalıdır!";
+    } else {
+      errorMessage = "Tanımlanamayan bir hata oluştu $errorCode";
+    }
+    var snackBar = SnackBar(content: Text(errorMessage));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
