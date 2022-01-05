@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_media/models/user.dart';
 
 //Authorization service
@@ -29,5 +30,11 @@ class Authentication {
 
   Future<void> signOut() {
     return _firebaseAuth.signOut();
+  }
+
+  loginWithGoogle() async {
+    GoogleSignInAccount googleAccount = await GoogleSignIn().signIn();
+    print(googleAccount.id);
+    print(googleAccount.displayName);
   }
 }

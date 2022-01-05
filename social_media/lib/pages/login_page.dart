@@ -154,13 +154,16 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 20.0),
           const Center(child: Text("veya")),
           const SizedBox(height: 20.0),
-          const Center(
-              child: Text(
-            "Google ile Giriş Yap",
-            style: TextStyle(
-              fontSize: 19.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
+          Center(
+              child: InkWell(
+            onTap: _loginWithGoogle,
+            child: Text(
+              "Google ile Giriş Yap",
+              style: TextStyle(
+                fontSize: 19.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
             ),
           )),
           const SizedBox(height: 20.0),
@@ -185,6 +188,12 @@ class _LoginPageState extends State<LoginPage> {
         showAlert(errorCode: error.code);
       }
     }
+  }
+
+  void _loginWithGoogle() {
+    var _authenticationService =
+        Provider.of<Authentication>(context, listen: false);
+    _authenticationService.loginWithGoogle();
   }
 
   showAlert({errorCode}) {

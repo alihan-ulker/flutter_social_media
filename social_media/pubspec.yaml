@@ -38,6 +38,7 @@ dependencies:
   firebase_auth:
   firebase_core:
   provider:
+  google_sign_in:
 
 dev_dependencies:
   flutter_test:
