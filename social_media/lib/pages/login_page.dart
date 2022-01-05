@@ -185,15 +185,31 @@ class _LoginPageState extends State<LoginPage> {
       try {
         await _authenticationService.loginWithEmail(email, password);
       } catch (error) {
+        setState(() {
+          loading = false;
+        });
+
         showAlert(errorCode: error.code);
       }
     }
   }
 
-  void _loginWithGoogle() {
+  void _loginWithGoogle() async {
     var _authenticationService =
         Provider.of<Authentication>(context, listen: false);
-    _authenticationService.loginWithGoogle();
+
+    setState(() {
+      loading = true;
+    });
+
+    try {
+      await _authenticationService.loginWithGoogle();
+    } catch (error) {
+      setState(() {
+        loading = false;
+      });
+      showAlert(errorCode: error.code);
+    }
   }
 
   showAlert({errorCode}) {

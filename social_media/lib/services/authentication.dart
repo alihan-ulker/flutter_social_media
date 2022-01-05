@@ -32,7 +32,7 @@ class Authentication {
     return _firebaseAuth.signOut();
   }
 
-  loginWithGoogle() async {
+  Future<Client> loginWithGoogle() async {
     GoogleSignInAccount googleAccount = await GoogleSignIn().signIn();
     GoogleSignInAuthentication googleAuthorizationCard =
         await googleAccount.authentication;
@@ -43,9 +43,7 @@ class Authentication {
 
     UserCredential loginCard =
         await _firebaseAuth.signInWithCredential(passwordFreeLogin);
-    print(loginCard.user.uid);
-    print(loginCard.user.displayName);
-    print(loginCard.user.photoURL);
-    print(loginCard.user.email);
+
+    return _userCreate(loginCard.user);
   }
 }
