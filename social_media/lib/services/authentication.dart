@@ -34,7 +34,18 @@ class Authentication {
 
   loginWithGoogle() async {
     GoogleSignInAccount googleAccount = await GoogleSignIn().signIn();
-    print(googleAccount.id);
-    print(googleAccount.displayName);
+    GoogleSignInAuthentication googleAuthorizationCard =
+        await googleAccount.authentication;
+
+    AuthCredential passwordFreeLogin = GoogleAuthProvider.credential(
+        idToken: googleAuthorizationCard.idToken,
+        accessToken: googleAuthorizationCard.accessToken);
+
+    UserCredential loginCard =
+        await _firebaseAuth.signInWithCredential(passwordFreeLogin);
+    print(loginCard.user.uid);
+    print(loginCard.user.displayName);
+    print(loginCard.user.photoURL);
+    print(loginCard.user.email);
   }
 }
