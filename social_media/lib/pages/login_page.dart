@@ -1,8 +1,10 @@
 //@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_media/models/user.dart';
 import 'package:social_media/pages/create_account.dart';
 import 'package:social_media/services/authentication.dart';
+import 'package:social_media/services/firestore_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -71,7 +73,9 @@ class _LoginPageState extends State<LoginPage> {
             validator: (inputValue) {
               if (inputValue.isEmpty) {
                 return "Email alanı boş bırakılamaz!";
-              } else if (!inputValue.contains("@")) {
+              }
+              //Checking the @ sign in the mail address
+              else if (!inputValue.contains("@")) {
                 return "Girilen değer mail formatında olmalıdır!";
               }
               return null;
@@ -157,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
           Center(
               child: InkWell(
             onTap: _loginWithGoogle,
-            child: Text(
+            child: const Text(
               "Google ile Giriş Yap",
               style: TextStyle(
                 fontSize: 19.0,
@@ -173,6 +177,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+//Firebase login services
   void _login() async {
     final _authenticationService =
         Provider.of<Authentication>(context, listen: false);
@@ -182,6 +187,7 @@ class _LoginPageState extends State<LoginPage> {
         loading = true;
       });
 
+//Sign in with Email
       try {
         await _authenticationService.loginWithEmail(email, password);
       } catch (error) {
@@ -194,6 +200,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+//Google login settings
   void _loginWithGoogle() async {
     var _authenticationService =
         Provider.of<Authentication>(context, listen: false);
@@ -203,7 +210,18 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      await _authenticationService.loginWithGoogle();
+      Client client = await _authenticationService.loginWithGoogle();
+      if (client != null) {
+        Client firestoreClient = await FirestoreService().getClient(client.id);
+        if (firestoreClient == null) {
+          FirestoreService().createClient(
+            id: client.id,
+            email: client.email,
+            clientName: client.clientName,
+            photoUrl: client.photoUrl,
+          );
+        }
+      }
     } catch (error) {
       setState(() {
         loading = false;
@@ -212,6 +230,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+//Warnings shown according to the errors that occur.
   showAlert({errorCode}) {
     String errorMessage;
 

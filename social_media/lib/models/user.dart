@@ -17,6 +17,7 @@ class Client {
       this.email,
       this.about});
 
+//Generated from Firebase.
   factory Client.generateFromFirebase(User client) {
     return Client(
       id: client.uid,
@@ -27,6 +28,7 @@ class Client {
     );
   }
 
+//Taking and fetching the ones generated from Firebase as snapshots.
   factory Client.generateFromDoc(DocumentSnapshot doc) {
     return Client(
       id: doc.id,

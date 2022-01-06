@@ -1,7 +1,9 @@
 //@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_media/models/user.dart';
 import 'package:social_media/services/authentication.dart';
+import 'package:social_media/services/firestore_service.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key key}) : super(key: key);
@@ -154,7 +156,15 @@ class _CreateAccountState extends State<CreateAccount> {
       });
 
       try {
-        await _authenticationService.registerWithEmail(email, password);
+        Client client =
+            await _authenticationService.registerWithEmail(email, password);
+        if (client != null) {
+          FirestoreService().createClient(
+            id: client.id,
+            email: client.email,
+            clientName: client.clientName,
+          );
+        }
         Navigator.pop(context);
       } catch (error) {
         setState(() {
@@ -165,6 +175,7 @@ class _CreateAccountState extends State<CreateAccount> {
     }
   }
 
+//Warnings shown according to the errors that occur.
   showAlert({errorCode}) {
     String errorMessage;
 
