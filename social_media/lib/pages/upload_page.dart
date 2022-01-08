@@ -18,7 +18,9 @@ class _UploadPageState extends State<UploadPage> {
 
   Widget uploadButton() {
     return IconButton(
-        onPressed: () {},
+        onPressed: () {
+          pickPhoto();
+        },
         icon: const Icon(
           Icons.file_upload,
           size: 50.0,
@@ -29,6 +31,33 @@ class _UploadPageState extends State<UploadPage> {
   Widget postForm() {
     return const Center(
       child: Text("Yüklenen resim ve text alanları gelecek."),
+    );
+  }
+
+  pickPhoto() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text("Gönderi Oluştur"),
+          children: [
+            SimpleDialogOption(
+              child: Text("Fotoğraf Çek"),
+              onPressed: () {},
+            ),
+            SimpleDialogOption(
+              child: Text("Galeriden Yükle"),
+              onPressed: () {},
+            ),
+            SimpleDialogOption(
+              child: Text("İptal"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
