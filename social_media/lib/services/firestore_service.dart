@@ -35,4 +35,14 @@ class FirestoreService {
         .get();
     return snapshot.docs.length;
   }
+
+////Retrieves follow-up counts from Firestore.
+  Future<int> numberOfFollowUp(clientId) async {
+    QuerySnapshot snapshot = await _firestore
+        .collection("followUp")
+        .doc(clientId)
+        .collection("clientFollowUp")
+        .get();
+    return snapshot.docs.length;
+  }
 }

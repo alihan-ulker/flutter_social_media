@@ -26,10 +26,19 @@ class _ProfilPageState extends State<ProfilPage> {
     });
   }
 
+  _getNumberOfFollowUp() async {
+    int numberOfFollowUp =
+        await FirestoreService().numberOfFollowUp(widget.profileOwnerId);
+    setState(() {
+      _followUp = numberOfFollowUp;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _getNumberOfFollower();
+    _getNumberOfFollowUp();
   }
 
   @override
