@@ -7,6 +7,7 @@ import 'package:social_media/models/user.dart';
 
 class Authentication {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  String activeClientId;
 
   Client _userCreate(User client) {
     return client == null ? null : Client.generateFromFirebase(client);

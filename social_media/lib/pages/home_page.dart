@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_media/pages/explore_page.dart';
 import 'package:social_media/pages/flow_page.dart';
 import 'package:social_media/pages/notification_page.dart';
@@ -32,6 +33,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    String activeClientId =
+        Provider.of<Authentication>(context, listen: false).activeClientId;
+
     return Scaffold(
       body: PageView(
         //Turns off page switching by scrolling.
@@ -42,12 +46,14 @@ class _HomePageState extends State<HomePage> {
           });
         },
         controller: pageControl,
-        children: const [
+        children: [
           FlowPage(),
           ExplorePage(),
           UploadPage(),
           NotificationPage(),
-          ProfilPage()
+          ProfilPage(
+            profileOwnerId: activeClientId,
+          )
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

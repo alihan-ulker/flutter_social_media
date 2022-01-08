@@ -1,9 +1,13 @@
+//@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_media/models/user.dart';
 import 'package:social_media/services/authentication.dart';
+import 'package:social_media/services/firestore_service.dart';
 
 class ProfilPage extends StatefulWidget {
-  const ProfilPage({Key? key}) : super(key: key);
+  final String profileOwnerId;
+  const ProfilPage({Key key, this.profileOwnerId}) : super(key: key);
 
   @override
   _ProfilPageState createState() => _ProfilPageState();
@@ -26,13 +30,23 @@ class _ProfilPageState extends State<ProfilPage> {
           ),
         ],
       ),
-      body: ListView(
-        children: [_profilDetails()],
-      ),
+      //It returns the user information according to the user id.
+      body: FutureBuilder<Object>(
+          future: FirestoreService().getClient(widget.profileOwnerId),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView(
+              children: [_profilDetails(snapshot.data)],
+            );
+          }),
     );
   }
 
-  Widget _profilDetails() {
+  Widget _profilDetails(Client profilData) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -43,6 +57,9 @@ class _ProfilPageState extends State<ProfilPage> {
               CircleAvatar(
                 backgroundColor: Colors.grey[300],
                 radius: 50.0,
+                backgroundImage: profilData.photoUrl.isNotEmpty
+                    ? NetworkImage(profilData.photoUrl)
+                    : AssetImage("assets/images/cookie_monster.png"),
               ),
               Expanded(
                 child: Row(
@@ -58,15 +75,15 @@ class _ProfilPageState extends State<ProfilPage> {
             ],
           ),
           const SizedBox(height: 10.0),
-          const Text(
-            "Kullanıcı Adı",
-            style: TextStyle(
+          Text(
+            profilData.clientName,
+            style: const TextStyle(
               fontSize: 15.0,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 5.0),
-          const Text("Hakkında"),
+          Text(profilData.about),
           const SizedBox(height: 25.0),
           _profilEditButton(),
         ],
@@ -90,8 +107,7 @@ class _ProfilPageState extends State<ProfilPage> {
   }
 
 //Settings for follower counters.
-  Widget _followerCounters(
-      {required String counterTitle, required int conuterNo}) {
+  Widget _followerCounters({String counterTitle, int conuterNo}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

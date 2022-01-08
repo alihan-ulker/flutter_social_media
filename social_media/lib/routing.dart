@@ -31,6 +31,7 @@ class Routing extends StatelessWidget {
         //If there is a user/client, go to the homepage.
         if (snapshot.hasData) {
           Client activeClient = snapshot.data;
+          _authenticationService.activeClientId = activeClient.id;
           return const HomePage();
         } else {
           return const LoginPage();
