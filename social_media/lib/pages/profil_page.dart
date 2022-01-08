@@ -14,6 +14,24 @@ class ProfilPage extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<ProfilPage> {
+  int _numberOfPosts = 0;
+  int _follower = 0;
+  int _followUp = 0;
+
+  _getNumberOfFollower() async {
+    int numberOfFollower =
+        await FirestoreService().numberOfFollower(widget.profileOwnerId);
+    setState(() {
+      _follower = numberOfFollower;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getNumberOfFollower();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,9 +84,11 @@ class _ProfilPageState extends State<ProfilPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _followerCounters(
-                        counterTitle: "Gönderiler", conuterNo: 35),
-                    _followerCounters(counterTitle: "Takipçi", conuterNo: 384),
-                    _followerCounters(counterTitle: "Takip", conuterNo: 402),
+                        counterTitle: "Gönderiler", conuterNo: _numberOfPosts),
+                    _followerCounters(
+                        counterTitle: "Takipçi", conuterNo: _follower),
+                    _followerCounters(
+                        counterTitle: "Takip", conuterNo: _followUp),
                   ],
                 ),
               ),

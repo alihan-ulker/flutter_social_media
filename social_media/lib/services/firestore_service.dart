@@ -25,4 +25,14 @@ class FirestoreService {
     }
     return null;
   }
+
+//Retrieves follower counts from Firestore.
+  Future<int> numberOfFollower(clientId) async {
+    QuerySnapshot snapshot = await _firestore
+        .collection("follower")
+        .doc(clientId)
+        .collection("clientFollower")
+        .get();
+    return snapshot.docs.length;
+  }
 }
