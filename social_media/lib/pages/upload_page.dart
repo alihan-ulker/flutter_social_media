@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UploadPage extends StatefulWidget {
   const UploadPage({Key key}) : super(key: key);
@@ -43,11 +44,15 @@ class _UploadPageState extends State<UploadPage> {
           children: [
             SimpleDialogOption(
               child: Text("Fotoğraf Çek"),
-              onPressed: () {},
+              onPressed: () {
+                takePhoto();
+              },
             ),
             SimpleDialogOption(
               child: Text("Galeriden Yükle"),
-              onPressed: () {},
+              onPressed: () {
+                pickFromGallery();
+              },
             ),
             SimpleDialogOption(
               child: Text("İptal"),
@@ -59,5 +64,31 @@ class _UploadPageState extends State<UploadPage> {
         );
       },
     );
+  }
+
+  takePhoto() async {
+    Navigator.pop(context);
+    var image = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      maxWidth: 800,
+      maxHeight: 600,
+      imageQuality: 80,
+    );
+    setState(() {
+      file = File(image.path);
+    });
+  }
+
+  pickFromGallery() async {
+    Navigator.pop(context);
+    var image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 800,
+      maxHeight: 600,
+      imageQuality: 80,
+    );
+    setState(() {
+      file = File(image.path);
+    });
   }
 }
