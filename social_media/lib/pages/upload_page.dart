@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_media/services/storage_service.dart';
 
 class UploadPage extends StatefulWidget {
   const UploadPage({Key key}) : super(key: key);
@@ -53,10 +54,7 @@ class _UploadPageState extends State<UploadPage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              print(aboutTextController.text);
-              print(locateTextController.text);
-            },
+            onPressed: _createPost,
             icon: const Icon(
               Icons.send,
               color: Colors.black,
@@ -98,6 +96,11 @@ class _UploadPageState extends State<UploadPage> {
         ],
       ),
     );
+  }
+
+  void _createPost() async {
+    String photoUrl = await StorageService().postImageUpload(file);
+    print(photoUrl);
   }
 
   pickPhoto() {
