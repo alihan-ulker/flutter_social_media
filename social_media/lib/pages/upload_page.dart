@@ -13,6 +13,8 @@ class UploadPage extends StatefulWidget {
 class _UploadPageState extends State<UploadPage> {
   File file;
   bool loading = false;
+  TextEditingController aboutTextController = TextEditingController();
+  TextEditingController locateTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return file == null ? uploadButton() : postForm();
@@ -39,15 +41,28 @@ class _UploadPageState extends State<UploadPage> {
           style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
+          onPressed: () {
+            setState(() {
+              file = null;
+            });
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+        ),
+        actions: [
+          IconButton(
             onPressed: () {
-              setState(() {
-                file = null;
-              });
+              print(aboutTextController.text);
+              print(locateTextController.text);
             },
             icon: const Icon(
-              Icons.arrow_back,
+              Icons.send,
               color: Colors.black,
-            )),
+            ),
+          ),
+        ],
       ),
       body: ListView(
         children: [
@@ -61,6 +76,23 @@ class _UploadPageState extends State<UploadPage> {
             child: Image.file(
               file,
               fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          TextFormField(
+            controller: aboutTextController,
+            decoration: const InputDecoration(
+              hintText: "Açıklama Ekle",
+              contentPadding: EdgeInsets.only(left: 15.0, right: 15.0),
+            ),
+          ),
+          TextFormField(
+            controller: locateTextController,
+            decoration: const InputDecoration(
+              hintText: "Konum",
+              contentPadding: EdgeInsets.only(left: 15.0, right: 15.0),
             ),
           ),
         ],
