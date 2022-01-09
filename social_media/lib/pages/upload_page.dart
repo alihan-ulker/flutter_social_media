@@ -12,6 +12,7 @@ class UploadPage extends StatefulWidget {
 
 class _UploadPageState extends State<UploadPage> {
   File file;
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     return file == null ? uploadButton() : postForm();
@@ -30,8 +31,40 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   Widget postForm() {
-    return const Center(
-      child: Text("Yüklenen resim ve text alanları gelecek."),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[100],
+        title: const Text(
+          "Gönderi Oluştur",
+          style: TextStyle(color: Colors.black),
+        ),
+        leading: IconButton(
+            onPressed: () {
+              setState(() {
+                file = null;
+              });
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            )),
+      ),
+      body: ListView(
+        children: [
+          loading
+              ? const LinearProgressIndicator()
+              : const SizedBox(
+                  height: 0.0,
+                ),
+          AspectRatio(
+            aspectRatio: 16.0 / 9.0,
+            child: Image.file(
+              file,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -40,22 +73,22 @@ class _UploadPageState extends State<UploadPage> {
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: Text("Gönderi Oluştur"),
+          title: const Text("Gönderi Oluştur"),
           children: [
             SimpleDialogOption(
-              child: Text("Fotoğraf Çek"),
+              child: const Text("Fotoğraf Çek"),
               onPressed: () {
                 takePhoto();
               },
             ),
             SimpleDialogOption(
-              child: Text("Galeriden Yükle"),
+              child: const Text("Galeriden Yükle"),
               onPressed: () {
                 pickFromGallery();
               },
             ),
             SimpleDialogOption(
-              child: Text("İptal"),
+              child: const Text("İptal"),
               onPressed: () {
                 Navigator.pop(context);
               },
