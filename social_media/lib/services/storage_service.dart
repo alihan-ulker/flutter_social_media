@@ -10,6 +10,7 @@ class StorageService {
 
 //The image requested to be loaded has been sent to the putFile method.
   Future<String> postImageUpload(File imageFile) async {
+    //A random and unique name is assigned to each uploaded image.
     photoId = Uuid().v4();
     UploadTask uploadManager =
         _storage.child("images/posts/post_$photoId.jpg").putFile(imageFile);

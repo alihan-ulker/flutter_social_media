@@ -45,4 +45,19 @@ class FirestoreService {
         .get();
     return snapshot.docs.length;
   }
+
+  Future<void> createPost({postPhotoUrl, about, publisherId, locate}) async {
+    await _firestore
+        .collection("posts")
+        .doc(publisherId)
+        .collection("clientPosts")
+        .add({
+      "postPhotoUrl": postPhotoUrl,
+      "about": about.text,
+      "publisherId": publisherId,
+      "likeCount": 0,
+      "locate": locate.text,
+      "createdTime": time,
+    });
+  }
 }

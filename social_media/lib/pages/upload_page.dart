@@ -2,6 +2,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:social_media/services/authentication.dart';
+import 'package:social_media/services/firestore_service.dart';
 import 'package:social_media/services/storage_service.dart';
 
 class UploadPage extends StatefulWidget {
@@ -99,8 +102,28 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   void _createPost() async {
-    String photoUrl = await StorageService().postImageUpload(file);
-    print(photoUrl);
+    if (!loading) {
+      setState(() {
+        loading = true;
+      });
+      String photoUrl = await StorageService().postImageUpload(file);
+      String activeClientId =
+          Provider.of<Authentication>(context, listen: false).activeClientId;
+
+      await FirestoreService().createPost(
+        postPhotoUrl: photoUrl,
+        about: aboutTextController,
+        publisherId: activeClientId,
+        locate: locateTextController,
+      );
+
+      setState(() {
+        loading = false;
+        aboutTextController.clear();
+        locateTextController.clear();
+        file = null;
+      });
+    }
   }
 
   pickPhoto() {
