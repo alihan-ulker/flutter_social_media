@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_media/models/post.dart';
 import 'package:social_media/models/user.dart';
 import 'package:social_media/services/authentication.dart';
 import 'package:social_media/services/firestore_service.dart';
@@ -17,6 +18,7 @@ class _ProfilPageState extends State<ProfilPage> {
   int _numberOfPosts = 0;
   int _follower = 0;
   int _followUp = 0;
+  List<Post> _posts = [];
 
   _getNumberOfFollower() async {
     int numberOfFollower =
@@ -34,11 +36,20 @@ class _ProfilPageState extends State<ProfilPage> {
     });
   }
 
+  _getPosts() async {
+    List<Post> posts = await FirestoreService().getPosts(widget.profileOwnerId);
+    setState(() {
+      _posts = posts;
+      _numberOfPosts = _posts.length;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _getNumberOfFollower();
     _getNumberOfFollowUp();
+    _getPosts();
   }
 
   @override
@@ -67,11 +78,16 @@ class _ProfilPageState extends State<ProfilPage> {
               );
             }
             return ListView(
-              children: [_profilDetails(snapshot.data)],
+              children: [
+                _profilDetails(snapshot.data),
+                //_showPosts(),
+              ],
             );
           }),
     );
   }
+
+  Widget _showPosts() {}
 
   Widget _profilDetails(Client profilData) {
     return Padding(

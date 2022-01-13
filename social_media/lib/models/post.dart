@@ -17,7 +17,7 @@ class Post {
       this.likeNumber,
       this.locate});
 
-  //Taking and fetching the ones generated from Firebase as snapshots.
+  //Taking and fetching the ones generated from Firestore as snapshots.
   factory Post.generateFromDoc(DocumentSnapshot doc) {
     return Post(
       id: doc.id,

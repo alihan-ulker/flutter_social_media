@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_media/models/post.dart';
 import 'package:social_media/models/user.dart';
 
 class FirestoreService {
@@ -46,6 +47,7 @@ class FirestoreService {
     return snapshot.docs.length;
   }
 
+//To create posts in Firestore.
   Future<void> createPost({postPhotoUrl, about, publisherId, locate}) async {
     await _firestore
         .collection("posts")
@@ -59,5 +61,20 @@ class FirestoreService {
       "locate": locate.text,
       "createdTime": time,
     });
+  }
+
+//To fetch posts shared from Firestore by last post date.
+  Future<List<Post>> getPosts(clientId) async {
+    QuerySnapshot snapshot = await _firestore
+        .collection("posts")
+        .doc(clientId)
+        .collection("clientPosts")
+        .orderBy("createdTime", descending: true)
+        .get();
+
+    //To return posts as a list.
+    List<Post> posts =
+        snapshot.docs.map((doc) => Post.generateFromDoc(doc)).toList();
+    return posts;
   }
 }
