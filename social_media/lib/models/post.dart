@@ -6,7 +6,7 @@ class Post {
   final String postPhotoUrl;
   final String about;
   final String publisherId;
-  final int likeNumber;
+  final int likeCount;
   final String locate;
 
   Post(
@@ -14,7 +14,7 @@ class Post {
       this.postPhotoUrl,
       this.about,
       this.publisherId,
-      this.likeNumber,
+      this.likeCount,
       this.locate});
 
   //Taking and fetching the ones generated from Firestore as snapshots.
@@ -24,7 +24,7 @@ class Post {
       postPhotoUrl: doc.get("postPhotoUrl"),
       about: doc.get("about"),
       publisherId: doc.get("publisherId"),
-      likeNumber: doc.get("likeNumber"),
+      likeCount: doc.get("likeCount"),
       locate: doc.get("locate"),
     );
   }
