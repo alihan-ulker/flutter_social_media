@@ -8,6 +8,7 @@ class Client {
   final String clientName;
   final String photoUrl;
   final String email;
+  final String password;
   final String about;
 
   Client(
@@ -15,6 +16,7 @@ class Client {
       this.clientName,
       this.photoUrl,
       this.email,
+      this.password,
       this.about});
 
 //Generated from Firebase.
@@ -34,6 +36,7 @@ class Client {
       id: doc.id,
       clientName: doc.get("clientName"),
       email: doc.get("email"),
+      password: doc.get("password"),
       photoUrl: doc.get("photoUrl"),
       about: doc.get("about"),
     );

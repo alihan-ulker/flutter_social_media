@@ -7,10 +7,12 @@ class FirestoreService {
   final DateTime time = DateTime.now();
 
 //It saves the information of the user registered with create account to Cloud Firestore.
-  Future<void> createClient({id, email, clientName, photoUrl = ""}) async {
+  Future<void> createClient(
+      {id, email, password, clientName, photoUrl = ""}) async {
     await _firestore.collection("clients").doc(id).set({
       "clientName": clientName,
       "email": email,
+      "password": password,
       "photoUrl": photoUrl,
       "about": "",
       "createdTime": time,

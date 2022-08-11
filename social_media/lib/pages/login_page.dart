@@ -217,6 +217,7 @@ class _LoginPageState extends State<LoginPage> {
           FirestoreService().createClient(
             id: client.id,
             email: client.email,
+            password: client.password,
             clientName: client.clientName,
             photoUrl: client.photoUrl,
           );
